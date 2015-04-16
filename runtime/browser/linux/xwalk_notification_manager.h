@@ -48,7 +48,7 @@ class XWalkNotificationManager {
  private:
   base::ScopedPtrHashMap<int64, content::DesktopNotificationDelegate>
       notifications_map_;
-  std::map<base::string16, NotifyNotification*> notifications_replace_map_;
+  std::map<std::string, NotifyNotification*> notifications_replace_map_;
   std::map<NotifyNotification*, gulong> notifications_handler_map_;
 
   bool initialized_;
