@@ -43,6 +43,7 @@
 #endif
 
 #if defined(OS_TIZEN)
+#include "third_party/WebKit/public/web/WebScriptSource.h"
 #include "xwalk/runtime/renderer/tizen/xwalk_render_view_ext_tizen.h"
 #endif
 
@@ -69,6 +70,29 @@ class XWalkFrameHelper
   ~XWalkFrameHelper() override {}
 
   // RenderFrameObserver implementation.
+  void DidCreateScriptContext(v8::Handle<v8::Context> context,
+                              int extension_group, int world_id) override {
+    if (extension_controller_)
+      extension_controller_->DidCreateScriptContext(
+          render_frame()->GetWebFrame(), context);
+
+#if defined(OS_TIZEN)
+    const std::string code =
+        "(function() {"
+        "  window.eventListenerList = [];"
+        "  window._addEventListener = window.addEventListener;"
+        "  window.addEventListener = function(event, callback, useCapture) {"
+        "    if (event == 'storage') {"
+        "      window.eventListenerList.push(callback);"
+        "    }"
+        "    window._addEventListener(event, callback, useCapture);"
+        "  }"
+        "})();";
+    const blink::WebScriptSource source =
+      blink::WebScriptSource(base::ASCIIToUTF16(code));
+    render_frame()->GetWebFrame()->executeScript(source);
+#endif
+  }
   void WillReleaseScriptContext(v8::Handle<v8::Context> context,
                                 int world_id) override {
     if (extension_controller_)
