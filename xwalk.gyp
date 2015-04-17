@@ -319,6 +319,7 @@
             'sysapps/sysapps_resources.gyp:xwalk_sysapps_resources',
             'tizen/xwalk_tizen.gypi:xwalk_tizen_lib',
             '<(DEPTH)/third_party/jsoncpp/jsoncpp.gyp:jsoncpp',
+            '<(DEPTH)/third_party/WebKit/public/blink_resources.gyp:blink_image_resources',
             '../components/components.gyp:web_modal',
             '../components/components.gyp:renderer_context_menu',
 
